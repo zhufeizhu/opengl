@@ -1,0 +1,4 @@
+## git ignore files or directory#
+/target/
+glfw-3.3.2/glfw-build
+demo/build
