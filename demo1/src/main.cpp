@@ -125,15 +125,22 @@ int main(){
 
     unsigned int VBO, VAO;
 
+    /*生成VAO和VBO*/
     glGenVertexArrays(1,&VAO);
     glGenBuffers(1,&VBO);
+
+    /*绑定当前要操作的VAO*/
     glBindVertexArray(VAO);
 
+    /*将VBO绑定到之前绑定的VAO中*/
     glBindBuffer(GL_ARRAY_BUFFER,VBO);
+
+    /*因为之前已经执行了glBindBuffer,因此当前操作的对象就是VBO的ARRAY_BUFFER,下面的glBufferData不需要指定对象*/
+    /*该函数将数据传输到了GPU的显存中，同时由VBO进行管理*/
     glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
 
     /**
-     * 该函数告诉OpenGL如何解析顶点数据
+     * 该函数告诉OpenGL如何解析顶点数据,这里就是解析的就是传输到当前绑定对象的数据，具体为顶点的坐标，需要按照一定的格式来解析它
      * param1:指定配置的顶点属性
      * param2:指定顶点属性的大小,当前为vec3,因此为3
      * param3:指定参数的类型，在GLSL中均为FLOAT
@@ -142,8 +149,10 @@ int main(){
      * param6:表示位置数据在缓冲中起始位置的偏移量(Offset)
     **/
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
     glEnableVertexAttribArray(0);
 
+    /*进行解绑定*/
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
@@ -158,6 +167,8 @@ int main(){
 
         /*激活着色器程序*/
         glUseProgram(shaderProgram);
+
+        /*因为初始阶段已经将VAO的数据和操作绑定好了,现在需要使用的时候直接绑定当current即可*/
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
